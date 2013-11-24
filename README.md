@@ -1,65 +1,22 @@
 #noolite
 =======
-This project is written in C for woriking with NooLite USB stick (PC118, PC1116, PC1132, RX1164) for linux.
-
-About NooLite: http://www.noo.com.by/
-
-Author: Mikhail Ermolenko
-
-E-mail: ermolenkom@yandex.ru
-
-Site: https://github.com/ermolenkom/noolite
-
-Этот проект написан на языке Си для работы c адаптером для компьютера системы NooLite для OS Linux.
-
-За основу взят этот проект https://github.com/pythonchik/nooLite
+За основу был взят вот этот проект: https://github.com/ermolenkom/noolite
 
 Отличия: 
-
-  увеличино количество команд для PC с 8 до 32
-  
-  добавлена возможность работать с RGB контроллером
-  
-  написаны отдельные драйвера для RX1164 на прием и передачу
+Проект избавлен от api windows-версии
   
   
 ##Инструкция.
-
 Устанавливаем библиотеку libusb (нужна для работы с HID-устройством)
-
   `sudo apt-get install libusb-1.0-0 libusb-1.0-0-dev`
   
 Скачиваем  
-
-  `wget https://github.com/ermolenkom/noolite/archive/noolite-master.zip`
-  
-Разархивируем  
-
-  `tar xvfz noolite-master.zip`
-
-
-Для ОТПРАВКИ команд выключателям через USB адаптер (PC118, PC1116, PC1132)
-
-
-###Компиляция, копирование, назначение прав:
-
-  `make clean && make`
-
-  `sudo cp noolitepc /usr/bin`
-
-  `sudo cp nooliterx /usr/bin`
-
-  `sudo cp nooliterxcfg /usr/bin`
-
-  `sudo chown root /usr/bin/noolitepc`
-
-  `sudo chown root /usr/bin/nooliterx`
-
-  `sudo chown root /usr/bin/nooliterxcfg`
-
+  `svn co https://github.com/vvzvlad/noolite.git`
+  `cd noolite/trunk`
+  `make`
   
 
-###Использование:
+##Использование:
 
   `noolitepc -api -set_ch 1 33`
   
