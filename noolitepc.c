@@ -59,15 +59,18 @@ int main(int argc, char * argv[])
           {
                COMMAND_ACTION[1] = 2;
           }
-          else if (strcmp(argv[1],"--off")==0) //Set channel OFF
+          else 
+          if (strcmp(argv[1],"--off")==0) //Set channel OFF
           {
                COMMAND_ACTION[1] = 0;
           }
-          else if (strcmp(argv[1],"--switch")==0) //Switch channel ON/OFF
+          else 
+          if (strcmp(argv[1],"--switch")==0) //Switch channel ON/OFF
           {
                COMMAND_ACTION[1] = 4;
           }
-          else if (strcmp(argv[1],"--set")==0) //Set level on channel - needed arg "level"
+          else 
+          if (strcmp(argv[1],"--set")==0) //Set level on channel - needed arg "level"
           {
                COMMAND_ACTION[1] = 6;
                COMMAND_ACTION[2]= 1; // формат
@@ -92,31 +95,38 @@ int main(int argc, char * argv[])
                }
                COMMAND_ACTION[5]= level;
           } 
-          else if (strcmp(argv[1],"--bind")==0) //Привязать канал
+          else 
+          if (strcmp(argv[1],"--bind")==0) //Привязать канал
           {
                COMMAND_ACTION[1] = 15;
           }
-          else if (strcmp(argv[1],"--unbind")==0) //отвязать канал
+          else 
+          if (strcmp(argv[1],"--unbind")==0) //отвязать канал
           {
                COMMAND_ACTION[1] = 9;
           }
-          else if (strcmp(argv[1],"--preset")==0) //Вызов записанного ранее в программе сценария освещения presetX, где X – номер сценария в программе (1…5)
+          else 
+          if (strcmp(argv[1],"--preset")==0) //Вызов записанного ранее в программе сценария освещения presetX, где X – номер сценария в программе (1…5)
           {
            //    COMMAND_ACTION[1] = ?; // не реализовано
           } 
-          else if (strcmp(argv[1],"--load_preset")==0) //Команда вызова записанного сценария из памяти силового блока для канала X
+          else 
+          if (strcmp(argv[1],"--load_preset")==0) //Команда вызова записанного сценария из памяти силового блока для канала X
           {
                COMMAND_ACTION[1] = 7;
           } 
-          else if (strcmp(argv[1],"--save_preset")==0) //Команда записи сценария в память силового блока для канала X
+          else 
+          if (strcmp(argv[1],"--save_preset")==0) //Команда записи сценария в память силового блока для канала X
           {
                COMMAND_ACTION[1] = 8;
           } 
-          else if (strcmp(argv[1],"--stop_reg")==0) //остановить регулировку 
+          else 
+          if (strcmp(argv[1],"--stop_reg")==0) //остановить регулировку 
           {
                COMMAND_ACTION[1] = 10;
           } 
-          else if (strcmp(argv[1],"--roll_color")==0) //включение плавного перебора цвета, выключается командой 10.
+          else 
+          if (strcmp(argv[1],"--roll_color")==0) //включение плавного перебора цвета, выключается командой 10.
           {
                COMMAND_ACTION[1] = 16;
                COMMAND_ACTION[2] = 4; // формат
@@ -126,17 +136,20 @@ int main(int argc, char * argv[])
                COMMAND_ACTION[1] = 17;
                COMMAND_ACTION[2] = 4; // формат
           } 
-          else if (strcmp(argv[1],"--sw_mode")==0) //переключение режима работы 
+          else 
+          if (strcmp(argv[1],"--sw_mode")==0) //переключение режима работы 
           {
                COMMAND_ACTION[1] = 18;
                COMMAND_ACTION[2] = 4; // формат
           } 
-          else if (strcmp(argv[1],"--speed_mode_sw")==0) //переключение скорости эффекта в режиме работы
+          else 
+          if (strcmp(argv[1],"--speed_mode_sw")==0) //переключение скорости эффекта в режиме работы
           {
                COMMAND_ACTION[1] = 19;
                COMMAND_ACTION[2] = 4; // формат
           } 
-          else if (strcmp(argv[1],"--set_color")==0) //Установка яркости на каждый канал независимо (R - 1, G - 2, B - 3). Уровень передается параметрами в формате 0…255
+          else 
+          if (strcmp(argv[1],"--set_color")==0) //Установка яркости на каждый канал независимо (R - 1, G - 2, B - 3). Уровень передается параметрами в формате 0…255
           { 
                COMMAND_ACTION[1] = 6;
                COMMAND_ACTION[2] = 3; // формат
@@ -149,7 +162,9 @@ int main(int argc, char * argv[])
                printf("Command unknown\n");
                return -1;
           }
-     } else {
+     } 
+     else 
+     {
           printf("Не указана команда\nИспользование: %s --<command> <channel> [<level>]\n", argv[0]);
           return -1;
      }
@@ -162,10 +177,8 @@ int main(int argc, char * argv[])
                return -1;
           }
           COMMAND_ACTION[4] = channel;
-     } else {
-          printf("Не указан канал\nИспользование: %s --<command> <channel> [<level>]\n", argv[0]);
-          return -1;
-     }
+     } 
+     else 
 
 //Prepare Command string
      libusb_init(NULL);
