@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# nooliterx - this script starts and stops the nooliterx NooLite RX1164 receiver daemon
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+nooliterx="/usr/local/bin/nooliterx"
+prog=$(basename $nooliterx)
+
+lockfile="/var/lock/subsys/nooliterx"
+pidfile="/var/run/${prog}.pid"
+
+start() {
+    [ -x $nooliterx ] || exit 5
+    echo -n $"Starting $prog: "
+    daemon $nooliterx -d
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc -p $pidfile $prog
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+case "$1" in
+    start)
+        $1
+        ;;
+    stop)
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 2
+esac
