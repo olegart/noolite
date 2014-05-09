@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
                                 printf("                -reset_ch - Reset channel\n");
                                 printf("                -bind_ch - Bind channel\n");
                                 printf("                -unbind_ch - Unbind channel\n");
-                                printf("        <channel> must be [1..8]\n");
+                                printf("        <channel> must be [1..64]\n");
                                 return -1;
                         }
                         printf("Неверно указан режим\nИспользование: %s -api -<command> <channel> [<level>]\n", argv[0]);
@@ -109,7 +109,7 @@ int main(int argc, char * argv[])
                 channel        = atoi(argv[3]);
                 channel--;
                 if ((channel>63)||(channel<0)) {
-                        printf("Неверно указан канал (1-8)\nИспользование: %s -api -<command> <channel> \n", argv[0]);
+                        printf("Неверно указан канал (1-64)\nИспользование: %s -api -<command> <channel> \n", argv[0]);
                         return -1;
                 }
                 COMMAND_ACTION[1] = channel;
