@@ -19,22 +19,48 @@ int main(int argc, char * argv[])
         int daemonize = 0;
         int timeout = 250; // default timeout 250ms
         int customcommand = 0;
-		
-		do_exit = 0;
-		usbhandle = NULL;
-		
-		static struct sigaction act; 
-		sigemptyset (&act.sa_mask);
-		act.sa_flags = 0;
-		act.sa_handler = SIG_IGN;
-		sigaction (SIGHUP, &act, NULL);
-		act.sa_handler = cleanup;
-		sigaction (SIGINT, &act, 0);
-		act.sa_handler =  cleanup;
-		sigaction (SIGTERM, &act, 0);
-		act.sa_handler =  cleanup;
-		sigaction (SIGKILL, &act, 0);
-		
+        
+        do_exit = 0;
+        usbhandle = NULL;
+        
+        static struct sigaction act; 
+        sigemptyset (&act.sa_mask);
+        act.sa_flags = 0;
+        act.sa_handler = SIG_IGN;
+        sigaction (SIGHUP, &act, NULL);
+        act.sa_handler = cleanup;
+        sigaction (SIGINT, &act, 0);
+        act.sa_handler =  cleanup;
+        sigaction (SIGTERM, &act, 0);
+        act.sa_handler =  cleanup;
+        sigaction (SIGKILL, &act, 0);
+        
+        FILE* config_fp;
+        char line[255] ;
+        char* token;
+    
+        config_fp = fopen( "/etc/noolite.conf", "r" );
+        if (config_fp)
+        {
+            while(fgets(line, 254, config_fp) != NULL)
+            {
+                token = strtok(line, "\t =\n\r");
+                if (token != NULL && token[0] != '#')
+                {
+                    if (!strcmp(token, "command"))
+                    {
+                        strcpy(commandtxt, strtok(NULL, "\t=\n\r"));
+                        while( *commandtxt==' ' )
+                            memmove(commandtxt,commandtxt+1,strlen(commandtxt));
+                    }
+                    if (!strcmp(token, "timeout"))
+                    {
+                        timeout = atoi(strtok(NULL, "=\n\r"));
+                    }
+                }
+            }
+        }
+
         while ((i = getopt (argc, argv, "dc:t:h")) != -1)
         {
             switch (i)
@@ -61,7 +87,7 @@ int main(int argc, char * argv[])
                     else
                         fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
                     usage();
-					exit(EXIT_SUCCESS);
+                    exit(EXIT_SUCCESS);
             default:
             abort ();
            }
@@ -88,16 +114,16 @@ int main(int argc, char * argv[])
             if (ret == LIBUSB_ERROR_BUSY)
                 printf("B\n");
             printf("ret:%i\n", ret);
-			libusb_close(usbhandle);
-			libusb_exit(NULL);
+            libusb_close(usbhandle);
+            libusb_exit(NULL);
             exit(EXIT_FAILURE);
         }
         
         if (libusb_claim_interface(usbhandle, DEV_INTF) < 0)
         {
             printf("USB interface error\n");
-			libusb_close(usbhandle);
-			libusb_exit(NULL);
+            libusb_close(usbhandle);
+            libusb_exit(NULL);
             exit(EXIT_FAILURE);
         }
         
@@ -107,21 +133,21 @@ int main(int argc, char * argv[])
         if (daemon(0, 0))
         {
             printf("Error forking to background\n");
-			libusb_close(usbhandle);
-			libusb_exit(NULL);
+            libusb_close(usbhandle);
+            libusb_exit(NULL);
             exit(EXIT_FAILURE);
         }
-		
-		char pidval[10];
-		int pidfile = open("/var/run/nooliterx.pid", O_CREAT | O_RDWR, 0666);
-		if (lockf(pidfile, F_TLOCK, 0) == -1)
-		{
-			libusb_close(usbhandle);
-			libusb_exit(NULL);
-			exit(EXIT_FAILURE);
-		}
-		sprintf(pidval, "%d\n", getpid());
-		write(pidfile, pidval, strlen(pidval));
+        
+        char pidval[10];
+        int pidfile = open("/var/run/nooliterx.pid", O_CREAT | O_RDWR, 0666);
+        if (lockf(pidfile, F_TLOCK, 0) == -1)
+        {
+            libusb_close(usbhandle);
+            libusb_exit(NULL);
+            exit(EXIT_FAILURE);
+        }
+        sprintf(pidval, "%d\n", getpid());
+        write(pidfile, pidval, strlen(pidval));
     }
     
     ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_IN, 0x9, 0x300, 0, buf, 8, 1000);
@@ -165,10 +191,10 @@ int main(int argc, char * argv[])
         }
         usleep(150000);   
     }
-	libusb_attach_kernel_driver(usbhandle, DEV_INTF);
-	libusb_close(usbhandle);
-	libusb_exit(NULL);
-	remove("/var/run/nooliterx.pid");
+    libusb_attach_kernel_driver(usbhandle, DEV_INTF);
+    libusb_close(usbhandle);
+    libusb_exit(NULL);
+    remove("/var/run/nooliterx.pid");
 }
 
 void usage(void)
@@ -242,5 +268,5 @@ char* int_to_str(int num)
 
 void cleanup(int sig)
 {
-	do_exit = 1;
+    do_exit = 1;
 }
