@@ -22,6 +22,5 @@ char* int_to_str(int num);
 void cleanup(int sig);
 
 int do_exit;
-libusb_device_handle * usbhandle;
 
 #endif
