@@ -16,6 +16,7 @@
   
 Скачиваем исходники  
   `wget https://github.com/olegart/noolite/archive/master.zip`  
+  `unzip master.zip`  
   `cd noolite-master`  
   `./configure && make && make install`  
   
