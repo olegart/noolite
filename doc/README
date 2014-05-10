@@ -4,6 +4,7 @@
 Основано на проектах https://github.com/ermolenkom/noolite и https://github.com/vvzvlad/noolite/
 
 Изменения: 
+* сборка проекта переведена под autoconf/automake
 * nooliterx: добавлены опции командной строки (установка таймаута, выполняемая команда)
 * nooliterx: в выполняемую команду можно передавать любое количество их имеющихся аргументов в любом порядке
 * nooliterx: добавлен режим демона
@@ -15,18 +16,18 @@
   
   
 ##Инструкция
-Устанавливаем библиотеку libusb (нужна для работы с HID-устройством)
+Помимо обычного окружения для сборки ПО, устанавливаем библиотеку libusb-1.0 (нужна для работы с HID-устройством)
 
   `sudo apt-get install libusb-1.0-0 libusb-1.0-0-dev`
-
+или
   `sudo yum install libusb1 libusb1-devel`
 
-(зависит от дистрибутива)
+(конкретика зависит от дистрибутива)
   
 Скачиваем исходники  
-  `svn co https://github.com/olegart/noolite.git`  
-  `cd noolite/trunk`  
-  `make`  
+  `wget https://github.com/olegart/noolite/archive/master.zip`  
+  `cd noolite-master`  
+  `./configure && make && make install`  
   
 
 ###Использование:

@@ -12,7 +12,7 @@ int main(int argc, char * argv[])
 {
         int i, ret;
         unsigned int level;
-		libusb_device_handle * usbhandle;
+        libusb_device_handle * usbhandle;
         unsigned char command[1], buf[8], channel, togl;
         char param;
         char commandtxt[255];
