@@ -32,7 +32,7 @@ int main(int argc, char * argv[])
      char param;
     
      if (argc <= 2) {
-          printf("Using %s -api -<command> <channel> [<level>|<RGB>]\n", argv[0]);
+          printf("Usage: %s <command> <channel> [<level>|<RGB>]\n", argv[0]);
           printf("     <command> may be:\n");
           printf("          --on - Turn channel ON\n");
           printf("          --off - Turn channel OFF\n");

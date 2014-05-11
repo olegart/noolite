@@ -35,7 +35,7 @@
 
 ######noolitepc — драйвер передатчика (PC118, PC1116, PC1132).
 
-  `noolitepc -api -<command> <channel> [<level>|<RGB>]`
+  `noolitepc <command> <channel> [<level>|<RGB>]`
   
 command — основная команда:  
 --on - включить канал  
