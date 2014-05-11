@@ -176,7 +176,7 @@ int main(int argc, char * argv[])
             if (customcommand)
             {
                 strcpy(cmd, str_replace(cmd, "%st", int_to_str(buf[0]))); // adapter status
-                strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1]))); // channel
+                strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1])+1)); // channel (+1 to be compatible with other utilities channel numbering scheme [1..x]
                 strcpy(cmd, str_replace(cmd, "%cm", int_to_str(buf[2]))); // command
                 strcpy(cmd, str_replace(cmd, "%df", int_to_str(buf[3]))); // data format
                 strcpy(cmd, str_replace(cmd, "%d0", int_to_str(buf[4]))); // 1st data byte
