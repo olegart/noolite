@@ -53,6 +53,7 @@ int main(int argc, char * argv[])
                         strcpy(commandtxt, strtok(NULL, "\t=\n\r"));
                         while( *commandtxt==' ' )
                             memmove(commandtxt,commandtxt+1,strlen(commandtxt));
+			customcommand = 1;
                     }
                     if (!strcmp(token, "timeout"))
                     {
