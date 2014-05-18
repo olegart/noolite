@@ -38,30 +38,31 @@
   `noolitepc <command> <channel> [<level>|<RGB>]`
   
 command — основная команда:  
+
 --on - включить канал  
 --off - выключить канал  
 --sw - переключить канал (вкл → выкл, выкл → вкл)  
 --set - установить уровень яркости в канале (для диммируемых блоков)  
 --bind - привязать канал передатчика к силовому блоку  
 --unbind - отвязать канал  
---load_preset - загрузить настройки канала  
---save_preset - сохранить настройки канала  
---stop_reg - Stop change channel  
---roll_color - Rolling color  
---sw_color - Swith color  
---sw_mode - Swith mode  
---speed_mode_sw - Swith speed change color  
---set_color - установить цвет R[0..255] G[0..255] B[0..255]  
+--load - загрузить настройки канала  
+--save - сохранить настройки канала  
+--stop - Stop changing level  
+--color - установить цвет R[0..255] G[0..255] B[0..255]  
+--color_roll - Rolling color  
+--color_switch - Switch color  
+--color_mode - Switch mode  
+--mode_speed - Switch speed change color  
 <channel> — номер канала, [1..32]  
 <level> — уровень яркости [0..100] в команде --set  
-<RGB> — цвет [0..255] [0..255] [0..255] в команде --set_color  
+<RGB> — цвет [0..255] [0..255] [0..255] в команде --color_set
 
 Например:  
 Установить яркость 33 % в канале 1:  
-  `noolitepc -api -set_ch 1 33`  
+  `noolitepc --set 1 33`  
 
 Выключить канал 5:  
-  `noolitepc -api -off 5 `  
+  `noolitepc --off 5 `  
 
 ###### nooliterx — драйвер приёмника (RX1164)  
 
