@@ -53,7 +53,7 @@ command — основная команда:
 --color_switch - Switch color  
 --color_mode - Switch mode  
 --mode_speed - Switch speed change color  
-<channel> — номер канала, [1..32]  
+<channel> — номер канала, [1..8] для PC118, [1..16] для PC1116 или [1..32] для PC1132
 <level> — уровень яркости [0..100] в команде --set  
 <RGB> — цвет [0..255] [0..255] [0..255] в команде --color_set
 
