@@ -53,7 +53,7 @@ int main(int argc, char * argv[])
                         strcpy(commandtxt, strtok(NULL, "\t=\n\r"));
                         while( *commandtxt==' ' )
                             memmove(commandtxt,commandtxt+1,strlen(commandtxt));
-			customcommand = 1;
+                        customcommand = 1;
                     }
                     if (!strcmp(token, "timeout"))
                     {
@@ -176,7 +176,7 @@ int main(int argc, char * argv[])
             if (customcommand)
             {
                 strcpy(cmd, str_replace(cmd, "%st", int_to_str(buf[0]))); // adapter status
-                strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1])+1)); // channel (+1 to be compatible with other utilities channel numbering scheme [1..x]
+                strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1]+1))); // channel (+1 to be compatible with other utilities channel numbering scheme [1..x]
                 strcpy(cmd, str_replace(cmd, "%cm", int_to_str(buf[2]))); // command
                 strcpy(cmd, str_replace(cmd, "%df", int_to_str(buf[3]))); // data format
                 strcpy(cmd, str_replace(cmd, "%d0", int_to_str(buf[4]))); // 1st data byte
@@ -186,7 +186,7 @@ int main(int argc, char * argv[])
             }
             else
             {
-                sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+                sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1], buf[2]+1, buf[3], buf[4], buf[5], buf[6], buf[7]);
             }
             system(cmd);
             //printf("\ncomm: %s\n", cmd);
