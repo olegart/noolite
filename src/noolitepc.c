@@ -164,16 +164,11 @@ int main(int argc, char * argv[])
     {
         channel = atoi(argv[2]);
         channel--;
-        if ((channel > 31) || (channel < 0))
-        {
-            printf("Channel number is out of range (1-32)\nUdage: %s <command> <channel> [<level>]\n", argv[0]);
-            return -1;
-        }
         COMMAND_ACTION[4] = channel;
     }
     else
     {
-        printf("No channel numaber.\nUsage: %s <command> <channel> [<level>]\n", argv[0]);
+        printf("No channel number.\nUsage: %s <command> <channel> [<level>]\n", argv[0]);
         return -1;
     }
 
@@ -187,6 +182,17 @@ int main(int argc, char * argv[])
         libusb_exit(NULL);
         return 0;
     }
+
+    char str_desc[10];
+    struct libusb_device_descriptor desc;
+    libusb_get_device_descriptor(libusb_get_device(handle), &desc);
+    libusb_get_string_descriptor_ascii(handle, desc.iProduct, str_desc, 10);
+    if ( (channel < 0) || (channel >= atoi(str_desc+4)))
+    {
+	printf("Channel number is out of range (1-%d for the %s transmitter you are using)\nUsage: %s <command> <channel> [<level>]\n", atoi(str_desc+4), str_desc, argv[0]);
+        return -1;
+    } 
+
     if (libusb_kernel_driver_active(handle,DEV_INTF))
     {
         libusb_detach_kernel_driver(handle, DEV_INTF);
