@@ -1,6 +1,6 @@
 /*   Consloe Utility for nooLite PC11xx
      (c) Mikhail Ermolenko
-	 (c) Oleg Artamonov
+     (c) Oleg Artamonov
 */
 
 #include <libusb-1.0/libusb.h>
@@ -25,38 +25,38 @@ int main(int argc, char * argv[])
      char param;
     
      //Arg Control
-	 
+     
      if (argc == 1) {
           printf("Usage: %s --help\n", argv[0]);
           return -1;
      }
 
     if (strcmp (argv[1],"--help")==0)
-	{
-		printf("Usage: %s <command> <channel> [<level>|<RGB>]\n", argv[0]);
+    {
+        printf("Usage: %s <command> <channel> [<level>|<RGB>]\n", argv[0]);
         printf("     <command>:\n");
-		printf("          --on - Turn channel ON\n");
-		printf("          --off - Turn channel OFF\n");
-		printf("          --switch - Switch channel ON/OFF\n");
-		printf("          --set - Set level for channel\n");
-		printf("          --bind - Bind channel\n");
-		printf("          --unbind - Unbind channel\n");
-		printf("          --load - Load preset channel\n");
-		printf("          --save - Save preset channel\n");
-		printf("          --stop - Stop changing level\n");
-		printf("          --color_roll - Rolling color\n");
-		printf("          --color_switch - Switch color\n");
-		printf("          --color - Set color R[0..255] G[0..255] B[0..255]\n");		
-		printf("          --mode - Switch mode\n");
-		printf("          --mode_speed - Switch mode speed\n");
-		printf("     <channel> must be [1..32]\n");
-		printf("     <level> must be [0..100] - use with -set_ch\n");
-		printf("     <RGB> must be [0..255] [0..255] [0..255] - use with -set_color\n");
-		return -1;
+        printf("          --on - Turn channel ON\n");
+        printf("          --off - Turn channel OFF\n");
+        printf("          --switch - Switch channel ON/OFF\n");
+        printf("          --set - Set level for channel\n");
+        printf("          --bind - Bind channel\n");
+        printf("          --unbind - Unbind channel\n");
+        printf("          --load - Load preset channel\n");
+        printf("          --save - Save preset channel\n");
+        printf("          --stop - Stop changing level\n");
+        printf("          --color_roll - Rolling color\n");
+        printf("          --color_switch - Switch color\n");
+        printf("          --color - Set color R[0..255] G[0..255] B[0..255]\n");        
+        printf("          --mode - Switch mode\n");
+        printf("          --mode_speed - Switch mode speed\n");
+        printf("     <channel> must be [1..32]\n");
+        printf("     <level> must be [0..100] - use with -set_ch\n");
+        printf("     <RGB> must be [0..255] [0..255] [0..255] - use with -set_color\n");
+        return -1;
     }
 
     if (argc >= 3)
-	{
+    {
         if (strcmp (argv[1],"--on")==0)  //Set cnannel ON
         {
             COMMAND_ACTION[1] = 2;
@@ -74,25 +74,25 @@ int main(int argc, char * argv[])
             COMMAND_ACTION[1] = 6;
             COMMAND_ACTION[2] = 1; // формат
             if (argc >= 4)
-			{
+            {
                 level     = atoi(argv[3]);
             }
-			else
-			{
+            else
+            {
                 printf("Missing brightness value. \nUsage: %s <command> <channel> [<level>]\n", argv[0]);
                 return -1;
             }
             if (level>100)
-			{
-				level=100;
+            {
+                level=100;
             }
             if (level<0)
             {
-				level=0;
+                level=0;
             }
-			if (level>0)
+            if (level>0)
             {  
-				level=(int)(34+(float)level*1.23);
+                level=(int)(34+(float)level*1.23);
             }
             COMMAND_ACTION[5]= level;
         } 
@@ -106,7 +106,7 @@ int main(int argc, char * argv[])
         }
         else if (strcmp(argv[1],"--preset")==0) //Вызов записанного ранее в программе сценария освещения presetX, где X – номер сценария в программе (1…5)
         {
-			//    COMMAND_ACTION[1] = ?; // не реализовано
+            //    COMMAND_ACTION[1] = ?; // не реализовано
         } 
         else if (strcmp(argv[1],"--load")==0) //Команда вызова записанного сценария из памяти силового блока для канала X
         {
@@ -114,11 +114,11 @@ int main(int argc, char * argv[])
         } 
         else if (strcmp(argv[1],"--save")==0) //Команда записи сценария в память силового блока для канала X
         {
-			COMMAND_ACTION[1] = 8;
+            COMMAND_ACTION[1] = 8;
         } 
         else if (strcmp(argv[1],"--stop")==0) //остановить регулировку 
         {
-			COMMAND_ACTION[1] = 10;
+            COMMAND_ACTION[1] = 10;
         } 
         else if (strcmp(argv[1],"--color_roll")==0) //включение плавного перебора цвета, выключается командой 10.
         {
@@ -154,52 +154,52 @@ int main(int argc, char * argv[])
             return -1;
         }
     }
-	else
-	{
+    else
+    {
         printf("Unknownw command.\nUsage: %s <command> <channel> [<level>]\n", argv[0]);
         return -1;
     }
 
     if (argc >= 3)
-	{
+    {
         channel = atoi(argv[2]);
         channel--;
         if ((channel > 31) || (channel < 0))
-		{
-			printf("Channel number is out of range (1-32)\nUdage: %s <command> <channel> [<level>]\n", argv[0]);
+        {
+            printf("Channel number is out of range (1-32)\nUdage: %s <command> <channel> [<level>]\n", argv[0]);
             return -1;
         }
         COMMAND_ACTION[4] = channel;
     }
-	else
-	{
+    else
+    {
         printf("No channel numaber.\nUsage: %s <command> <channel> [<level>]\n", argv[0]);
         return -1;
     }
 
-	//Prepare Command string
+    //Prepare Command string
     libusb_init(NULL);
     libusb_set_debug(NULL, 3);
     handle = libusb_open_device_with_vid_pid(NULL, DEV_VID, DEV_PID);
     if (handle == NULL)
-	{
+    {
         printf("No compatible devices were found.\n");
         libusb_exit(NULL);
         return 0;
     }
     if (libusb_kernel_driver_active(handle,DEV_INTF))
-	{
+    {
         libusb_detach_kernel_driver(handle, DEV_INTF);
-	}
+    }
     if ((ret = libusb_set_configuration(handle, DEV_CONFIG)) < 0)
     {
         printf("USB configuration error.\n");
         libusb_close(handle);
         libusb_exit(NULL);
         if (ret == LIBUSB_ERROR_BUSY)
-		{
+        {
             printf("B\n");
-		}
+        }
         printf("ret:%i\n", ret);   
         return 0;
     }
