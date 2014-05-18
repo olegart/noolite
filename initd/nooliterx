@@ -1,8 +1,10 @@
 #!/bin/sh
 #
-# nooliterx - this script starts and stops the nooliterx NooLite RX1164 receiver daemon
+# nooliterx	Starts and stops the NooLite RX1164 receiver daemon
 #
-
+# chkconfig: 2345 55 25
+# description: NooLite RX1164 smart home wireless receiver daemon
+#
 # Source function library.
 . /etc/rc.d/init.d/functions
 
