@@ -189,7 +189,7 @@ int main(int argc, char * argv[])
     libusb_get_string_descriptor_ascii(handle, desc.iProduct, str_desc, 10);
     if ( (channel < 0) || (channel >= atoi(str_desc+4)))
     {
-	printf("Channel number is out of range (1-%d for the %s transmitter you are using)\nUsage: %s <command> <channel> [<level>]\n", atoi(str_desc+4), str_desc, argv[0]);
+    printf("Channel number is out of range (1-%d for the %s transmitter you are using)\nUsage: %s <command> <channel> [<level>]\n", atoi(str_desc+4), str_desc, argv[0]);
         return -1;
     } 
 

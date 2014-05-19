@@ -1,21 +1,9 @@
 /*        Console Utility for nooLite
         (c) Mikhail Ermolenko
-        для подсказки - режим компиляции
-        gcc nooliterxcfg.c -o nooliterxcfg -lusb-1.0
-        выставить режим запуска в правами root
-        # chown root nooliterxcfg
-        # chmod a+s nooliterxcfg
+        (c) Oleg Artamonov
 */
 
-#define LINUX
-
-#ifdef WINDOWS
-#include "libusb.h"
-#endif
-#ifdef LINUX
 #include <libusb-1.0/libusb.h>
-#endif
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -41,81 +29,77 @@ int main(int argc, char * argv[])
         //Arg Control
 
         if (argc == 1) {
-                printf("Using: %s -help\n", argv[0]);
+                printf("Usage: %s --help\n", argv[0]);
                 return -1;
         }
 
-        if (argc >= 2) {
-                if(strcmp (argv[1],"-api")){ //first arg "-api" needed
-                        if (strcmp (argv[1],"-help")==0)
-                        {
-                                printf("Using %s -api -<command> <channel> [<level>]\n", argv[0]);
-                                printf("        <command> may be:\n");
-                                printf("                -norm_ch - normal job \n");
-                                printf("                -clear_ch - clear \n");
-                                printf("                -clearall_ch - Clear ALL\n");
-                                printf("                -reset_ch - Reset channel\n");
-                                printf("                -bind_ch - Bind channel\n");
-                                printf("                -unbind_ch - Unbind channel\n");
-                                printf("        <channel> must be [1..64]\n");
-                                return -1;
-                        }
-                        printf("Неверно указан режим\nИспользование: %s -api -<command> <channel> [<level>]\n", argv[0]);
-                        return -1;
-                }
-        } else {
-                printf("Не указан параметр API\r\nИспользование: %s -api -<command> <channel> [<level>]\n", argv[0]);
-                return -1;
+        if (strcmp (argv[1],"--help")==0)
+        {
+            printf("Using %s -api -<command> <channel> [<level>]\n", argv[0]);
+            printf("        <command> may be:\n");
+            printf("                --normal - back to normal mode \n");
+            printf("                --clear - clear \n");
+            printf("                --clearall - Clear ALL\n");
+            printf("                --reset - Reset channel\n");
+            printf("                --bind - Bind channel\n");
+            printf("                --unbind - Unbind channel\n");
+            printf("        <channel> must be [1..64]\n");
+            return -1;
         }
         
-        if (argc >= 3) {
-                if (strcmp (argv[2],"-norm_ch")==0) //0-нормальная работа
-                {
-                        //COMMAND_ACTION[0] = 1; // перепутаны биты управления
-                        COMMAND_ACTION[0] = 2;
-                }
-                else if (strcmp(argv[2],"-bind_ch")==0) //1-включить привязку на адрес ячейки, 30 секунд
-                {
-                        //COMMAND_ACTION[0] = 2; // перепутаны биты управления // Нашел {mixa}
-                        COMMAND_ACTION[0] = 1;
-                }
-                else if (strcmp(argv[2],"-unbind_ch")==0) //2- выключить привязку принудительно
-                {
-                        COMMAND_ACTION[0] = 4;
-                }
-                else if (strcmp(argv[2],"-clear_ch")==0) //3- очистить ячейку (адрес ячейки)
-                {
-                        COMMAND_ACTION[0] = 8;
-                }
-                else if (strcmp(argv[2],"-clearall_ch")==0) //4- очистить всю память 
-                {
-                        COMMAND_ACTION[0] = 16;
-                }
-                else if (strcmp(argv[2],"-reset_ch")==0) //5- сбросить значение калибровки USB 
-                {
-                        COMMAND_ACTION[0] = 32;
-                }
-                else
-                {
-                        printf("Command unknown\n");
-                        return -1;
-                }
-        } else {
-                printf("Не указана команда\nИспользование: %s -api -<command> <channel>\n", argv[0]);
+        if (argc >= 3)
+        {
+            if (strcmp (argv[1],"--normal")==0) //0-нормальная работа
+            {
+                COMMAND_ACTION[0] = 2;
+            }
+            else if (strcmp(argv[1],"--bind")==0) //1-включить привязку на адрес ячейки, 30 секунд
+            {
+                COMMAND_ACTION[0] = 1;
+            }
+            else if (strcmp(argv[1],"--unbind")==0) //2- выключить привязку принудительно
+            {
+                COMMAND_ACTION[0] = 4;
+            }
+            else if (strcmp(argv[1],"--clear")==0) //3- очистить ячейку (адрес ячейки)
+            {
+                COMMAND_ACTION[0] = 8;
+            }
+            else if (strcmp(argv[1],"--clearall")==0) //4- очистить всю память 
+            {
+                COMMAND_ACTION[0] = 16;
+            }
+            else if (strcmp(argv[1],"--reset")==0) //5- сбросить значение калибровки USB 
+            {
+                COMMAND_ACTION[0] = 32;
+            }
+            else
+            {
+                printf("Unknown command\n");
                 return -1;
+            }
+        }
+        else
+        {
+            printf("Не указана команда\nИспользование: %s --<command> <channel>\n", argv[0]);
+            return -1;
         }
 
-        if (argc >= 4) {
-                channel        = atoi(argv[3]);
-                channel--;
-                if ((channel>63)||(channel<0)) {
-                        printf("Неверно указан канал (1-64)\nИспользование: %s -api -<command> <channel> \n", argv[0]);
-                        return -1;
-                }
-                COMMAND_ACTION[1] = channel;
-        } else {
-                printf("Не указан канал\nИспользование: %s -api -<command> <channel>\n", argv[0]);
+        if (argc >= 3)
+        {
+            channel = atoi(argv[2]);
+            channel--;
+            if ((channel>63)||(channel<0))
+            {
+                printf("Неверно указан канал (1-64)\nИспользование: %s --<command> <channel> \n", argv[0]);
                 return -1;
+            }
+            COMMAND_ACTION[1] = channel;
+        }
+        else
+        {
+            printf("Не указан канал\nИспользование: %s --<command> <channel>\n", argv[0]);
+            return -1;
         }
 
 //Prepare Command string
@@ -135,7 +119,7 @@ int main(int argc, char * argv[])
                 libusb_close(handle);
                 libusb_exit(NULL);
                 if (ret == LIBUSB_ERROR_BUSY)
-                 printf("B\n");
+                    printf("B\n");
                 printf("ret:%i\n", ret);
                 return 0;
         }
