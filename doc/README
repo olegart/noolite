@@ -95,15 +95,15 @@ command — основная команда:
 
 ###### nooliterxcfg — конфигурация приёмника (RX1164)  
 
-  `nooliterxcfg -api -<command> <channel> [<level>]`
+  `nooliterxcfg --<command> <channel> [<level>]`
 
 command может быть:  
-  -norm_ch - обычная работа  
-  -clear_ch - очистить ячейку  
-  -clearall_ch - очистить всю память  
-  -reset_ch - сбросить значение калибровки USB  
-  -bind_ch - привязать канал  
-  -unbind_ch - отвязать канал  
-  -help — напечатать справку  
+  --normal - обычная работа  
+  --clear - очистить ячейку  
+  --clearall - очистить всю память  
+  --reset - сбросить значение калибровки USB  
+  --bind - привязать канал  
+  --unbind - отвязать канал  
+  --help — напечатать справку  
   
   Номер канала должен быть в диапазоне [1...64]
