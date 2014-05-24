@@ -195,7 +195,7 @@ int main(int argc, char * argv[])
             }
             else
             {
-                sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1], buf[2]+1, buf[3], buf[4], buf[5], buf[6], buf[7]);
+                sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
             }
             system(cmd);
             //printf("\ncomm: %s\n", cmd);
