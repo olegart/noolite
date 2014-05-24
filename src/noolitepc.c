@@ -215,7 +215,7 @@ int main(int argc, char * argv[])
     //0x9 - номер запроса
     //0x300 - значение запроса - их надо получить из мониторинга
 
-    if ((ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100) < 0);
+    if ((ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100)) < 0)
     {
         printf("USB data transfer error %i.\n", ret);
     }
