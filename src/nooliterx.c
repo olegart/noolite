@@ -20,6 +20,8 @@ int main(int argc, char * argv[])
         int daemonize = 0;
         int timeout = 250; // default timeout 250ms
         int customcommand = 0;
+        int settimeout = 0;
+        int ignoreconfig = 0;
         
         do_exit = 0;
         usbhandle = NULL;
@@ -40,30 +42,7 @@ int main(int argc, char * argv[])
         char line[255] ;
         char* token;
     
-        config_fp = fopen( "/etc/noolite.conf", "r" );
-        if (config_fp)
-        {
-            while(fgets(line, 254, config_fp) != NULL)
-            {
-                token = strtok(line, "\t =\n\r");
-                if (token != NULL && token[0] != '#')
-                {
-                    if (!strcmp(token, "command"))
-                    {
-                        strcpy(commandtxt, strtok(NULL, "\t\n\r"));
-                        while( (*commandtxt == ' ') || (*commandtxt == '=') )
-                            memmove(commandtxt, commandtxt+1, strlen(commandtxt));
-                        customcommand = 1;
-                    }
-                    if (!strcmp(token, "timeout"))
-                    {
-                        timeout = atoi(strtok(NULL, "=\n\r"));
-                    }
-                }
-            }
-        }
-
-        while ((i = getopt (argc, argv, "dc:t:h")) != -1)
+        while ((i = getopt (argc, argv, "idc:t:h")) != -1)
         {
             switch (i)
             {
@@ -72,12 +51,16 @@ int main(int argc, char * argv[])
                 break;
                 case 't':
                     timeout = atoi(optarg);
+                    settimeout = 1;
                 break;
                 case 'c':
                     strcpy(commandtxt, optarg);
                     customcommand = 1;
                 break;
-                case 'h':
+                case 'i':
+                    ignoreconfig = 1;
+                    break;
+        case 'h':
                     usage();
                     exit (EXIT_SUCCESS);
                 break;
@@ -94,6 +77,32 @@ int main(int argc, char * argv[])
             abort ();
            }
          }
+
+        config_fp = fopen( "/etc/noolite.conf", "r" );
+        if (config_fp && !ignoreconfig)
+        {
+            while(fgets(line, 254, config_fp) != NULL)
+            {
+                token = strtok(line, "\t =\n\r");
+                if (token != NULL && token[0] != '#')
+                {
+                    if ((!strcmp(token, "command")) && (customcommand == 0))
+                    {
+                        strcpy(commandtxt, strtok(NULL, "\t\n\r"));
+                        while( (*commandtxt == ' ') || (*commandtxt == '=') )
+						{
+                            memmove(commandtxt, commandtxt+1, strlen(commandtxt));
+                        }
+						customcommand = 1;
+                    }
+                    if ((!strcmp(token, "timeout")) && !settimeout)
+                    {
+                        timeout = atoi(strtok(NULL, "=\n\r"));
+                    }
+                }
+            }
+        }
+		fclose(config_fp);
 
         libusb_init(NULL);
         libusb_set_debug(NULL, 3);
@@ -205,6 +214,7 @@ void usage(void)
     printf("  -c\tcommand to execute. Default is to print received data to stdout.\n");
     printf("  -t\tcommand execution timeout, milliseconds (0 to disable). Default is 250 (250 ms).\n");
     printf("  -d\trun in the background.\n");
+	printf("  -i\tignore /etc/noolite.conf.\n");
     printf("  -h\tprint help and exit.\n");
     printf("\nCommand examples:\n");
     printf("  echo 'Status: %%st Channel: %%ch Command: %%cm Data format: %%df Data bytes: %%d0 %%d1 %%d2 %%d3'\n");
