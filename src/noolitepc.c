@@ -199,14 +199,9 @@ int main(int argc, char * argv[])
     }
     if ((ret = libusb_set_configuration(handle, DEV_CONFIG)) < 0)
     {
-        printf("USB configuration error.\n");
+        printf("USB configuration error %i.\n", ret);
         libusb_close(handle);
         libusb_exit(NULL);
-        if (ret == LIBUSB_ERROR_BUSY)
-        {
-            printf("B\n");
-        }
-        printf("ret:%i\n", ret);   
         return 0;
     }
     if (libusb_claim_interface(handle,  DEV_INTF) < 0)
@@ -220,7 +215,10 @@ int main(int argc, char * argv[])
     //0x9 - номер запроса
     //0x300 - значение запроса - их надо получить из мониторинга
 
-    ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100);
+    if ((ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100) < 0);
+    {
+        printf("USB data transfer error %i.\n", ret);
+    }
 
     libusb_attach_kernel_driver(handle, DEV_INTF);
     libusb_close(handle);
