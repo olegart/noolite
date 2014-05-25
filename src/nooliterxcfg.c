@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
 
         if (strcmp (argv[1],"--help")==0)
         {
-            printf("Using %s -api -<command> <channel> [<level>]\n", argv[0]);
+            printf("Usage: %s <command> <channel> [<level>]\n", argv[0]);
             printf("        <command> may be:\n");
             printf("                --normal - back to normal mode \n");
             printf("                --clear - clear \n");
@@ -81,7 +81,7 @@ int main(int argc, char * argv[])
         }
         else
         {
-            printf("Не указана команда\nИспользование: %s --<command> <channel>\n", argv[0]);
+            printf("No command was given. Usage: %s <command> <channel>\n", argv[0]);
             return -1;
         }
 
@@ -91,14 +91,14 @@ int main(int argc, char * argv[])
             channel--;
             if ((channel>63)||(channel<0))
             {
-                printf("Неверно указан канал (1-64)\nИспользование: %s --<command> <channel> \n", argv[0]);
+                printf("Channel number out of range (1-64)\nUsage: %s <command> <channel> \n", argv[0]);
                 return -1;
             }
             COMMAND_ACTION[1] = channel;
         }
         else
         {
-            printf("Не указан канал\nИспользование: %s --<command> <channel>\n", argv[0]);
+            printf("No channel was given.\nUsage: %s <command> <channel>\n", argv[0]);
             return -1;
         }
 
@@ -107,7 +107,7 @@ int main(int argc, char * argv[])
         libusb_set_debug(NULL, 3);
         handle = libusb_open_device_with_vid_pid(NULL, DEV_VID, DEV_PID);
         if (handle == NULL) {
-         printf("Не удалось найти устройство\n");
+         printf("No compatible USB devices were found.\n");
          libusb_exit(NULL);
          return 0;
         }
@@ -115,17 +115,14 @@ int main(int argc, char * argv[])
                 libusb_detach_kernel_driver(handle, DEV_INTF);
         if ((ret = libusb_set_configuration(handle, DEV_CONFIG)) < 0)
         {
-                printf("Ошибка конфигурации\n");
+                printf("USB configuration error\n");
                 libusb_close(handle);
                 libusb_exit(NULL);
-                if (ret == LIBUSB_ERROR_BUSY)
-                    printf("B\n");
-                printf("ret:%i\n", ret);
                 return 0;
         }
         if (libusb_claim_interface(handle, DEV_INTF) < 0)
         {
-                printf("Ошибка интерфейса\n");
+                printf("USB interface error\n");
                 libusb_close(handle);
                 libusb_exit(NULL);
                 return 0;
