@@ -8,7 +8,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-nooliterx="/usr/local/bin/nooliterx"
+nooliterx="/usr/bin/nooliterx"
 prog=$(basename $nooliterx)
 
 lockfile="/var/lock/subsys/nooliterx"
