@@ -101,8 +101,8 @@ int main(int argc, char * argv[])
                     }
                 }
             }
+            fclose(config_fp);
         }
-		fclose(config_fp);
 
         libusb_init(NULL);
         libusb_set_debug(NULL, 3);
