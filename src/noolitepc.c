@@ -156,7 +156,7 @@ int main(int argc, char * argv[])
     }
     else
     {
-        printf("Unknownw command.\nUsage: %s <command> <channel> [<level>]\n", argv[0]);
+        printf("Unknown command.\nUsage: %s <command> <channel> [<level>]\n", argv[0]);
         return -1;
     }
 
