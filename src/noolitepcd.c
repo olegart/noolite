@@ -123,10 +123,10 @@ int main(int argc, char * argv[])
         close(s2);
         
         char * cmd[5];
-        cmd[0] = strtok(input, " \n");
+        cmd[0] = strtok(input, "- \n");
         for (i=1; i<5; i++)
         {
-            cmd[i] = strtok(NULL, " \n");
+            cmd[i] = strtok(NULL, "- \n");
         }
             
         if (strcmp (cmd[0], "on") == 0)  //Set cnannel ON
