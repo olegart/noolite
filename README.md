@@ -21,3 +21,5 @@
   `./configure && make && make install`  
   
 Инструкции по использованию — в файле doc/README
+
+Makefile и скрипт автозапуска для OpenWRT — в папке openwrt
