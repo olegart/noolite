@@ -33,7 +33,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = noolitepc$(EXEEXT) nooliterx$(EXEEXT) \
-	nooliterxcfg$(EXEEXT)
+	nooliterxcfg$(EXEEXT) noolitepcd$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -49,6 +49,9 @@ PROGRAMS = $(bin_PROGRAMS)
 am_noolitepc_OBJECTS = noolitepc.$(OBJEXT)
 noolitepc_OBJECTS = $(am_noolitepc_OBJECTS)
 noolitepc_LDADD = $(LDADD)
+am_noolitepcd_OBJECTS = noolitepcd.$(OBJEXT)
+noolitepcd_OBJECTS = $(am_noolitepcd_OBJECTS)
+noolitepcd_LDADD = $(LDADD)
 am_nooliterx_OBJECTS = nooliterx.$(OBJEXT)
 nooliterx_OBJECTS = $(am_nooliterx_OBJECTS)
 nooliterx_LDADD = $(LDADD)
@@ -63,10 +66,10 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(noolitepc_SOURCES) $(nooliterx_SOURCES) \
-	$(nooliterxcfg_SOURCES)
-DIST_SOURCES = $(noolitepc_SOURCES) $(nooliterx_SOURCES) \
-	$(nooliterxcfg_SOURCES)
+SOURCES = $(noolitepc_SOURCES) $(noolitepcd_SOURCES) \
+	$(nooliterx_SOURCES) $(nooliterxcfg_SOURCES)
+DIST_SOURCES = $(noolitepc_SOURCES) $(noolitepcd_SOURCES) \
+	$(nooliterx_SOURCES) $(nooliterxcfg_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -160,6 +163,7 @@ AM_LDFLAGS = -lusb-1.0
 noolitepc_SOURCES = noolitepc.c
 nooliterx_SOURCES = nooliterx.c nooliterx.h
 nooliterxcfg_SOURCES = nooliterxcfg.c
+noolitepcd_SOURCES = noolitepcd.c
 all: all-am
 
 .SUFFIXES:
@@ -234,6 +238,9 @@ clean-binPROGRAMS:
 noolitepc$(EXEEXT): $(noolitepc_OBJECTS) $(noolitepc_DEPENDENCIES) 
 	@rm -f noolitepc$(EXEEXT)
 	$(LINK) $(noolitepc_OBJECTS) $(noolitepc_LDADD) $(LIBS)
+noolitepcd$(EXEEXT): $(noolitepcd_OBJECTS) $(noolitepcd_DEPENDENCIES) 
+	@rm -f noolitepcd$(EXEEXT)
+	$(LINK) $(noolitepcd_OBJECTS) $(noolitepcd_LDADD) $(LIBS)
 nooliterx$(EXEEXT): $(nooliterx_OBJECTS) $(nooliterx_DEPENDENCIES) 
 	@rm -f nooliterx$(EXEEXT)
 	$(LINK) $(nooliterx_OBJECTS) $(nooliterx_LDADD) $(LIBS)
@@ -248,6 +255,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/noolitepc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/noolitepcd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nooliterx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nooliterxcfg.Po@am__quote@
 
