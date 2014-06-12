@@ -38,7 +38,7 @@ int main(int argc, char * argv[])
         act.sa_handler =  cleanup;
         sigaction (SIGKILL, &act, 0);
         
-        FILE* config_fp;
+        FILE* config = NULL;
         char line[255] ;
         char* token;
     
@@ -78,30 +78,33 @@ int main(int argc, char * argv[])
            }
          }
 
-        config_fp = fopen( "/etc/noolite.conf", "r" );
-        if (config_fp && !ignoreconfig)
+        if (!ignoreconfig)
         {
-            while(fgets(line, 254, config_fp) != NULL)
+            config = fopen( "/etc/noolite.conf", "r" );
+            if (config)
             {
-                token = strtok(line, "\t =\n\r");
-                if (token != NULL && token[0] != '#')
+                while(fgets(line, 254, config) != NULL)
                 {
-                    if ((!strcmp(token, "command")) && (customcommand == 0))
+                    token = strtok(line, "\t =\n\r");
+                    if (token != NULL && token[0] != '#')
                     {
-                        strcpy(commandtxt, strtok(NULL, "\t\n\r"));
-                        while( (*commandtxt == ' ') || (*commandtxt == '=') )
-						{
-                            memmove(commandtxt, commandtxt+1, strlen(commandtxt));
+                        if ((!strcmp(token, "command")) && (customcommand == 0))
+                        {
+                            strcpy(commandtxt, strtok(NULL, "\t\n\r"));
+                            while( (*commandtxt == ' ') || (*commandtxt == '=') )
+                            {
+                                memmove(commandtxt, commandtxt+1, strlen(commandtxt));
+                            }
+                            customcommand = 1;
                         }
-						customcommand = 1;
-                    }
-                    if ((!strcmp(token, "timeout")) && !settimeout)
-                    {
-                        timeout = atoi(strtok(NULL, "=\n\r"));
+                        if ((!strcmp(token, "timeout")) && !settimeout)
+                        {
+                            timeout = atoi(strtok(NULL, "=\n\r"));
+                        }
                     }
                 }
+                fclose(config);
             }
-            fclose(config_fp);
         }
 
         libusb_init(NULL);
@@ -139,6 +142,7 @@ int main(int argc, char * argv[])
         }
         
     // fork to background if needed and create pid file
+    int pidfile;
     if (daemonize)
     {
         if (daemon(0, 0))
@@ -150,7 +154,7 @@ int main(int argc, char * argv[])
         }
         
         char pidval[10];
-        int pidfile = open("/var/run/nooliterx.pid", O_CREAT | O_RDWR, 0666);
+        pidfile = open("/var/run/nooliterx.pid", O_CREAT | O_RDWR, 0666);
         if (lockf(pidfile, F_TLOCK, 0) == -1)
         {
             libusb_close(usbhandle);
@@ -177,8 +181,8 @@ int main(int argc, char * argv[])
             snprintf(cmd, 255, "%s", commandtxt);
         }
         
-        ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_IN, 0x9, 0x300, 0, buf, 8, 1000);
-        if (togl!=(buf[0] & 128)) // TOGL is a 7th bit of the 1st data byte (adapter status), it toggles value every time new command received
+        ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_IN, 0x9, 0x300, 0, buf, 8, 500);
+        if ((ret == 8) && (togl!=(buf[0] & 128))) // TOGL is a 7th bit of the 1st data byte (adapter status), it toggles value every time new command received
         {
             togl = (buf[0] & 128);
             
@@ -198,14 +202,18 @@ int main(int argc, char * argv[])
                 sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
             }
             system(cmd);
-            //printf("\ncomm: %s\n", cmd);
         }
-        usleep(150000);   
+        usleep(100000);   
     }
     libusb_attach_kernel_driver(usbhandle, DEV_INTF);
     libusb_close(usbhandle);
     libusb_exit(NULL);
-    remove("/var/run/nooliterx.pid");
+    if (pidfile)
+    {
+        lockf(pidfile, F_ULOCK, 0);
+        close(pidfile);
+        remove("/var/run/nooliterx.pid");
+    }
 }
 
 void usage(void)
@@ -214,7 +222,7 @@ void usage(void)
     printf("  -c\tcommand to execute. Default is to print received data to stdout.\n");
     printf("  -t\tcommand execution timeout, milliseconds (0 to disable). Default is 250 (250 ms).\n");
     printf("  -d\trun in the background.\n");
-	printf("  -i\tignore /etc/noolite.conf.\n");
+    printf("  -i\tignore /etc/noolite.conf.\n");
     printf("  -h\tprint help and exit.\n");
     printf("\nCommand examples:\n");
     printf("  echo 'Status: %%st Channel: %%ch Command: %%cm Data format: %%df Data bytes: %%d0 %%d1 %%d2 %%d3'\n");
