@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT(noolite, 0.5.0, oleg@olegart.ru)
-AM_INIT_AUTOMAKE(noolite, 0.5.0)
+AC_INIT(noolite, 0.6.0, oleg@olegart.ru)
+AM_INIT_AUTOMAKE(noolite, 0.6.0)
 AC_OUTPUT(Makefile src/Makefile doc/Makefile)
 AC_CONFIG_SRCDIR([src/nooliterxcfg.c])
 AC_CONFIG_HEADERS([config.h])
