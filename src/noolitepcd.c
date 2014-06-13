@@ -30,6 +30,8 @@ int main(int argc, char * argv[])
     sigaction (SIGTERM, &act, 0);
     act.sa_handler =  cleanup;
     sigaction (SIGKILL, &act, 0);
+	
+	setlogmask(LOG_UPTO(LOG_INFO));
 
     int s, s2, t, len;
     struct sockaddr_un local, remote;
@@ -115,6 +117,9 @@ int main(int argc, char * argv[])
     sprintf(pidval, "%d\n", getpid());
     write(pidfile, pidval, strlen(pidval));
     
+	openlog("noolitepcd", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_DAEMON);
+    syslog(LOG_INFO, "noolitepcd started");
+	
     while (!do_exit)
     {
         s2 = accept(s, (struct sockaddr *)&remote, &t);
@@ -238,7 +243,9 @@ int main(int argc, char * argv[])
         if ((ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100)) < 0)
         {
             printf("USB data transfer error %i.\n", ret);
+			syslog(LOG_ERR, "USB data transfer error %i", ret);
         }
+		syslog(LOG_INFO, "Sent: command %s", cmd);
         struct timespec tw = {0, 400000000}; // 400 ms
         while (nanosleep (&tw, &tw) == -1) continue;
     }
@@ -246,7 +253,9 @@ int main(int argc, char * argv[])
     libusb_attach_kernel_driver(handle, DEV_INTF);
     libusb_close(handle);
     libusb_exit(NULL);
-    
+	syslog(LOG_INFO, "noolitepcd terminated");
+    closelog();
+	
     lockf(pidfile, F_ULOCK, 0);
     close(pidfile);
     remove(PID_NAME);
