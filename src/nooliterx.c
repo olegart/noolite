@@ -25,6 +25,8 @@ int main(int argc, char * argv[])
         
         do_exit = 0;
         usbhandle = NULL;
+		
+		setlogmask(LOG_UPTO(LOG_INFO));
         
         static struct sigaction act; 
         sigemptyset (&act.sa_mask);
@@ -168,6 +170,9 @@ int main(int argc, char * argv[])
     ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_IN, 0x9, 0x300, 0, buf, 8, 1000);
     togl = (buf[0] & 128);
     
+	openlog("nooliterx", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_DAEMON);
+	syslog(LOG_INFO, "nooliterx started");
+	
     while (!do_exit)
     {
         char i;
@@ -201,6 +206,7 @@ int main(int argc, char * argv[])
             {
                 sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
             }
+			syslog(LOG_INFO, "Status %i, channel %i, command %i, format %i, data %i %i %i %i", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
             system(cmd);
         }
         usleep(100000);   
@@ -208,6 +214,7 @@ int main(int argc, char * argv[])
     libusb_attach_kernel_driver(usbhandle, DEV_INTF);
     libusb_close(usbhandle);
     libusb_exit(NULL);
+	closelog();
     if (pidfile)
     {
         lockf(pidfile, F_ULOCK, 0);
