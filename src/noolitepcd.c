@@ -245,7 +245,7 @@ int main(int argc, char * argv[])
             printf("USB data transfer error %i.\n", ret);
             syslog(LOG_ERR, "USB data transfer error %i", ret);
         }
-        syslog(LOG_INFO, "Sent: command %s", cmd);
+        syslog(LOG_INFO, "Sent: command '%s', raw data %i %i %i %i %i %i %i %i", input, COMMAND_ACTION[0], COMMAND_ACTION[1], COMMAND_ACTION[2], COMMAND_ACTION[3], COMMAND_ACTION[4], COMMAND_ACTION[5], COMMAND_ACTION[6], COMMAND_ACTION[7]);
         struct timespec tw = {0, 400000000}; // 400 ms
         while (nanosleep (&tw, &tw) == -1) continue;
     }
