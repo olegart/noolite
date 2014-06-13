@@ -214,7 +214,7 @@ int main(int argc, char * argv[])
     libusb_attach_kernel_driver(usbhandle, DEV_INTF);
     libusb_close(usbhandle);
     libusb_exit(NULL);
-	syslog(LOG_INFO, "exiting");
+	syslog(LOG_INFO, "nooliterx terminated");
     closelog();
     if (pidfile)
     {
