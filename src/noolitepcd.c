@@ -239,7 +239,8 @@ int main(int argc, char * argv[])
         {
             printf("USB data transfer error %i.\n", ret);
         }
-        usleep(350000); // 350 ms sleep
+        struct timespec tw = {0, 400000000}; // 400 ms
+        while (nanosleep (&tw, &tw) == -1) continue;
     }
     
     libusb_attach_kernel_driver(handle, DEV_INTF);
