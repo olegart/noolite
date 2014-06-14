@@ -3,10 +3,15 @@
 
 #include "noolitepcd.h"
 
+const char BITRATE = 2; // 2 = 1000 bps
+const char REPEAT = 1; // repeat N times
+
 unsigned char COMMAND_ACTION[8] = {0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; 
 
 int main(int argc, char * argv[])
 {
+    COMMAND_ACTION[0] = (BITRATE << 3) + (REPEAT << 5);
+
     libusb_device_handle * handle;
     
     int i, ret;
