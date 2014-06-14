@@ -13,7 +13,7 @@
 #define DEV_CONFIG 1
 #define DEV_INTF 0
 
-const char BITRATE = 2; // 2 = 1000 bps
+const char BITRATE = 2; // 2 = 1000 bps, 3 = 500 bps
 const char REPEAT = 1; // repeat N times
 
 unsigned char COMMAND_ACTION[8] = {0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; 
@@ -22,19 +22,19 @@ int main(int argc, char * argv[])
 {
     COMMAND_ACTION[0] = (BITRATE << 3) + (REPEAT << 5);
 
-     libusb_device_handle * handle;
+    libusb_device_handle * handle;
     
-     int i, ret;
-     unsigned int level;
-     unsigned char command[1], buf[8], channel;
-     char param;
+    int i, ret;
+    unsigned int level;
+    unsigned char command[1], buf[8], channel;
+    char param;
     
-     //Arg Control
+    //Arg Control
      
-     if (argc == 1) {
-          printf("Usage: %s --help\n", argv[0]);
-          return -1;
-     }
+    if (argc == 1) {
+        printf("Usage: %s --help\n", argv[0]);
+        return -1;
+    }
 
     if (strcmp (argv[1],"--help")==0)
     {

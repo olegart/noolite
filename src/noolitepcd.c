@@ -3,8 +3,9 @@
 
 #include "noolitepcd.h"
 
-const char BITRATE = 2; // 2 = 1000 bps
+const char BITRATE = 2; // 2 = 1000 bps, 3 = 500 bps
 const char REPEAT = 1; // repeat N times
+const long INTERVAL = 400000000L; // 400 ms interval between transmit, suitable for 1000 bps transmission speed and 1 repeat
 
 unsigned char COMMAND_ACTION[8] = {0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; 
 
@@ -251,7 +252,8 @@ int main(int argc, char * argv[])
             syslog(LOG_ERR, "USB data transfer error %i", ret);
         }
         syslog(LOG_INFO, "Sent: %s: mode %i, command %i, format %i, address %i %i, data %i %i %i", input, COMMAND_ACTION[0], COMMAND_ACTION[1], COMMAND_ACTION[2], COMMAND_ACTION[3], COMMAND_ACTION[4], COMMAND_ACTION[5], COMMAND_ACTION[6], COMMAND_ACTION[7]);
-        struct timespec tw = {0, 400000000}; // 400 ms
+		
+        struct timespec tw = {0, INTERVAL}; // wait for current transmission to complete
         while (nanosleep (&tw, &tw) == -1) continue;
     }
     
