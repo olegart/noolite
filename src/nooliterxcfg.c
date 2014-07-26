@@ -19,13 +19,13 @@ unsigned char COMMAND_ACTION[8] = {0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; //{
 
 void usage()
 {
-    printf("Usage: %s <command> [channel]\n", argv[0]);
+    printf("Usage: nooliterxcfg <command> [channel]\n");
     printf("        <command> may be:\n");
-	printf("                --clear - clear previously binded channel\n");
-	printf("                --clearall - clear ALL channels\n");
+    printf("                --clear - clear previously binded channel\n");
+    printf("                --clearall - clear ALL channels\n");
     printf("                --bind - bind channel (30 seconds)\n");
     printf("                --stop - stop binding channel\n");
-	printf("                --help - print help and exit\n");
+    printf("                --help - print help and exit\n");
     printf("        <channel> must be [1..64]\n");
 }
 
@@ -48,16 +48,16 @@ int main(int argc, char * argv[])
             usage();
             return 0;
         }
-		
-		if (argc == 2) // no channel number expected
-		{
-			if ((strcmp(argv[1], "--bind") == 0) || (strcmp(argv[1], "--clear"))
-			{
-				printf("No channel number given.\n");
-				usage();
-				return -1;
-			}
-			
+        
+        if (argc == 2) // no channel number expected
+        {
+            if ((strcmp(argv[1], "--bind") == 0) || (strcmp(argv[1], "--clear")))
+            {
+                printf("No channel number given.\n");
+                usage();
+                return -1;
+            }
+            
             if (strcmp(argv[1], "--stop") == 0) // 2 - остановить привязку принудительно
             {
                 COMMAND_ACTION[0] = 2;
@@ -66,15 +66,15 @@ int main(int argc, char * argv[])
             {
                 COMMAND_ACTION[0] = 4;
             }
-			else
-			{
-				printf("Unknown command\n");
-				usage();
-				return -1;
-			}
-			
-			COMMAND_ACTION[1] = 0; // no channel number needed for these commands
-		}
+            else
+            {
+                printf("Unknown command\n");
+                usage();
+                return -1;
+            }
+            
+            COMMAND_ACTION[1] = 0; // no channel number needed for these commands
+        }
         
         if (argc >= 3)
         {
@@ -89,16 +89,16 @@ int main(int argc, char * argv[])
             else
             {
                 printf("Unknown command\n");
-				usage();
+                usage();
                 return -1;
             }
-			
-			channel = atoi(argv[2]);
+            
+            channel = atoi(argv[2]);
             channel--;
             if ((channel>63)||(channel<0))
             {
                 printf("Channel number out of range (1-64)\n", argv[0]);
-				usage();
+                usage();
                 return -1;
             }
             COMMAND_ACTION[1] = channel;
@@ -109,16 +109,16 @@ int main(int argc, char * argv[])
         libusb_set_debug(NULL, 3);
         handle = libusb_open_device_with_vid_pid(NULL, DEV_VID, DEV_PID);
         if (handle == NULL)
-		{
-			printf("No compatible USB devices were found.\n");
-			libusb_exit(NULL);
-			return 0;
+        {
+            printf("No compatible USB devices were found.\n");
+            libusb_exit(NULL);
+            return 0;
         }
         if (libusb_kernel_driver_active(handle,DEV_INTF))
-		{
+        {
                 libusb_detach_kernel_driver(handle, DEV_INTF);
         }
-		if ((ret = libusb_set_configuration(handle, DEV_CONFIG)) < 0)
+        if ((ret = libusb_set_configuration(handle, DEV_CONFIG)) < 0)
         {
                 printf("USB configuration error\n");
                 libusb_close(handle);
