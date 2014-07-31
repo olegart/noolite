@@ -240,12 +240,31 @@ int main(int argc, char * argv[])
 			i = recv(s2, input, 25, 0);
 			input[i] = 0; // null-terminated string
 			close(s2);
-			char * rxcmd[5];
+			char * rxcmd[2];
 			rxcmd[0] = strtok(input, "- \n");
-			for (i=1; i<5; i++)
-			{
-				rxcmd[i] = strtok(NULL, "- \n");
-			}
+			rxcmd[1] = strtok(NULL, "- \n");
+			
+			if (strcmp(rxcmd[0], "stop") == 0) // 2 - остановить привязку принудительно
+            {
+                COMMAND_ACTION[0] = 2;
+            }
+            else if (strcmp(rxcmd[0], "clearall") == 0) // 4 - очистить всю память 
+            {
+                COMMAND_ACTION[0] = 4;
+            }
+			else if (strcmp(rxcmd[0], "bind") == 0) // 1 - включить привязку на адрес ячейки, 30 секунд
+            {
+                COMMAND_ACTION[0] = 1;
+            }
+            else if (strcmp(rxcmd[0], "clear") == 0) // 3 - очистить ячейку
+            {
+                COMMAND_ACTION[0] = 3;
+            }
+			COMMAND_ACTION[1] = atoi(rxcmd[1]) - 1; // channel number
+			
+			ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100);
+			syslog(LOG_INFO, "Configuration command %s (channel %s) sent to USB receiver", rxcmd[0], rxcmd[1]);
+			usleep(100000); 
 		}
     }
     libusb_attach_kernel_driver(usbhandle, DEV_INTF);
