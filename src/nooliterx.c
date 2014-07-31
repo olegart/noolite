@@ -262,7 +262,7 @@ int main(int argc, char * argv[])
             }
             COMMAND_ACTION[1] = atoi(rxcmd[1]) - 1; // channel number
             
-            ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100);
+            ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100);
             syslog(LOG_INFO, "Configuration command %s (channel %s) sent to USB receiver", rxcmd[0], rxcmd[1]);
             usleep(100000); 
         }
