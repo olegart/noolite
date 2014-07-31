@@ -9,6 +9,8 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <syslog.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 
 #define DEV_VID 0x16c0 //0x5824
 #define DEV_PID 0x05dc //0x1500
@@ -23,5 +25,7 @@ char* int_to_str(int num);
 void cleanup(int sig);
 
 int do_exit;
+
+#define NSOCKET "/tmp/nooliterxd.sock"
 
 #endif
