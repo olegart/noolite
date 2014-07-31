@@ -43,28 +43,28 @@ int main(int argc, char * argv[])
         FILE* config = NULL;
         char line[255] ;
         char* token;
-		
-		// -- socket
-		int s, s2, t, len;
-		struct sockaddr_un local, remote;
-		if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
-		{
-			printf("Socket error\n");
-			exit(EXIT_FAILURE);
-		}
-		fcntl(s, F_SETFL, O_NONBLOCK); // non-blocking operations
-		local.sun_family = AF_UNIX;
-		strcpy(local.sun_path, NSOCKET);
-		unlink(local.sun_path);
-		len = strlen(local.sun_path) + sizeof(local.sun_family);
-		if (bind(s, (struct sockaddr *)&local, len) == -1)
-		{
-			printf("Socket bind failed\n");
-		}
-		if (listen(s, 5) == -1) {
-			printf("Socket listen failed\n");
-		}
-		// -- socket end
+        
+        // -- socket
+        int s, s2, t, len;
+        struct sockaddr_un local, remote;
+        if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
+        {
+            printf("Socket error\n");
+            exit(EXIT_FAILURE);
+        }
+        fcntl(s, F_SETFL, O_NONBLOCK); // non-blocking operations
+        local.sun_family = AF_UNIX;
+        strcpy(local.sun_path, NSOCKET);
+        unlink(local.sun_path);
+        len = strlen(local.sun_path) + sizeof(local.sun_family);
+        if (bind(s, (struct sockaddr *)&local, len) == -1)
+        {
+            printf("Socket bind failed\n");
+        }
+        if (listen(s, 5) == -1) {
+            printf("Socket listen failed\n");
+        }
+        // -- socket end
     
         while ((i = getopt (argc, argv, "idc:t:h")) != -1)
         {
@@ -195,56 +195,56 @@ int main(int argc, char * argv[])
     openlog("nooliterx", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_DAEMON);
     syslog(LOG_INFO, "nooliterx started");
     
-	char cmd[255];
+    char cmd[255];
     while (!do_exit)
     {
-		s2 = accept(s, (struct sockaddr *)&remote, &t);
-		if (s2 < 0) // no incoming connection on the socket, working as receiver
-		{
-			if (timeout)
-			{
-				snprintf(cmd, 255, "timeout %i %s", timeout, commandtxt);
-			}
-			else
-			{
-				snprintf(cmd, 255, "%s", commandtxt);
-			}
-			
-			ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_IN, 0x9, 0x300, 0, buf, 8, 500);
-			if ((ret == 8) && (togl!=(buf[0] & 128))) // TOGL is a 7th bit of the 1st data byte (adapter status), it toggles value every time new command received
-			{
-				togl = (buf[0] & 128);
-				
-				if (customcommand)
-				{
-					strcpy(cmd, str_replace(cmd, "%st", int_to_str(buf[0]))); // adapter status
-					strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1]+1))); // channel (+1 to be compatible with other utilities channel numbering scheme [1..x]
-					strcpy(cmd, str_replace(cmd, "%cm", int_to_str(buf[2]))); // command
-					strcpy(cmd, str_replace(cmd, "%df", int_to_str(buf[3]))); // data format
-					strcpy(cmd, str_replace(cmd, "%d0", int_to_str(buf[4]))); // 1st data byte
-					strcpy(cmd, str_replace(cmd, "%d1", int_to_str(buf[5]))); // 2nd data byte
-					strcpy(cmd, str_replace(cmd, "%d2", int_to_str(buf[6]))); // 3rd data byte
-					strcpy(cmd, str_replace(cmd, "%d3", int_to_str(buf[7]))); // 4th data byte
-				}
-				else
-				{
-					sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
-				}
-				syslog(LOG_INFO, "Received: status %i, channel %i, command %i, format %i, data %i %i %i %i", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
-				system(cmd);
-			}
-			usleep(100000);   
-		}
-		else // incoming connection, working as configuration tool
-		{
-			i = recv(s2, input, 25, 0);
-			input[i] = 0; // null-terminated string
-			close(s2);
-			char * rxcmd[2];
-			rxcmd[0] = strtok(input, "- \n");
-			rxcmd[1] = strtok(NULL, "- \n");
-			
-			if (strcmp(rxcmd[0], "stop") == 0) // 2 - остановить привязку принудительно
+        s2 = accept(s, (struct sockaddr *)&remote, &t);
+        if (s2 < 0) // no incoming connection on the socket, working as receiver
+        {
+            if (timeout)
+            {
+                snprintf(cmd, 255, "timeout %i %s", timeout, commandtxt);
+            }
+            else
+            {
+                snprintf(cmd, 255, "%s", commandtxt);
+            }
+            
+            ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_IN, 0x9, 0x300, 0, buf, 8, 500);
+            if ((ret == 8) && (togl!=(buf[0] & 128))) // TOGL is a 7th bit of the 1st data byte (adapter status), it toggles value every time new command received
+            {
+                togl = (buf[0] & 128);
+                
+                if (customcommand)
+                {
+                    strcpy(cmd, str_replace(cmd, "%st", int_to_str(buf[0]))); // adapter status
+                    strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1]+1))); // channel (+1 to be compatible with other utilities channel numbering scheme [1..x]
+                    strcpy(cmd, str_replace(cmd, "%cm", int_to_str(buf[2]))); // command
+                    strcpy(cmd, str_replace(cmd, "%df", int_to_str(buf[3]))); // data format
+                    strcpy(cmd, str_replace(cmd, "%d0", int_to_str(buf[4]))); // 1st data byte
+                    strcpy(cmd, str_replace(cmd, "%d1", int_to_str(buf[5]))); // 2nd data byte
+                    strcpy(cmd, str_replace(cmd, "%d2", int_to_str(buf[6]))); // 3rd data byte
+                    strcpy(cmd, str_replace(cmd, "%d3", int_to_str(buf[7]))); // 4th data byte
+                }
+                else
+                {
+                    sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+                }
+                syslog(LOG_INFO, "Received: status %i, channel %i, command %i, format %i, data %i %i %i %i", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+                system(cmd);
+            }
+            usleep(100000);   
+        }
+        else // incoming connection, working as configuration tool
+        {
+            i = recv(s2, cmd, 25, 0);
+            cmd[i] = 0; // null-terminated string
+            close(s2);
+            char * rxcmd[2];
+            rxcmd[0] = strtok(cmd, "- \n");
+            rxcmd[1] = strtok(NULL, "- \n");
+            
+            if (strcmp(rxcmd[0], "stop") == 0) // 2 - остановить привязку принудительно
             {
                 COMMAND_ACTION[0] = 2;
             }
@@ -252,7 +252,7 @@ int main(int argc, char * argv[])
             {
                 COMMAND_ACTION[0] = 4;
             }
-			else if (strcmp(rxcmd[0], "bind") == 0) // 1 - включить привязку на адрес ячейки, 30 секунд
+            else if (strcmp(rxcmd[0], "bind") == 0) // 1 - включить привязку на адрес ячейки, 30 секунд
             {
                 COMMAND_ACTION[0] = 1;
             }
@@ -260,17 +260,17 @@ int main(int argc, char * argv[])
             {
                 COMMAND_ACTION[0] = 3;
             }
-			COMMAND_ACTION[1] = atoi(rxcmd[1]) - 1; // channel number
-			
-			ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100);
-			syslog(LOG_INFO, "Configuration command %s (channel %s) sent to USB receiver", rxcmd[0], rxcmd[1]);
-			usleep(100000); 
-		}
+            COMMAND_ACTION[1] = atoi(rxcmd[1]) - 1; // channel number
+            
+            ret = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100);
+            syslog(LOG_INFO, "Configuration command %s (channel %s) sent to USB receiver", rxcmd[0], rxcmd[1]);
+            usleep(100000); 
+        }
     }
     libusb_attach_kernel_driver(usbhandle, DEV_INTF);
     libusb_close(usbhandle);
     libusb_exit(NULL);
-	syslog(LOG_INFO, "nooliterx terminated");
+    syslog(LOG_INFO, "nooliterx terminated");
     closelog();
     if (pidfile)
     {
