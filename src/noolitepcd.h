@@ -10,6 +10,7 @@
 #include <time.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/stat.h>
 #include <syslog.h>
 
 #define DEV_VID 0x16c0 //0x5824

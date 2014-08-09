@@ -11,6 +11,7 @@
 #include <syslog.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/stat.h>
 
 #define DEV_VID 0x16c0 //0x5824
 #define DEV_PID 0x05dc //0x1500
