@@ -45,6 +45,7 @@ int main(int argc, char * argv[])
         char* token;
         
         // -- socket
+		mode_t mask = umask(S_IXUSR | S_IXGRP | S_IXOTH);
         int s, s2, t, len;
         struct sockaddr_un local, remote;
         if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
@@ -53,11 +54,6 @@ int main(int argc, char * argv[])
             exit(EXIT_FAILURE);
         }
         
-        mode_t mask = umask(0);
-        if (fchmod(s, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) < 0) // socket file permissions = 0666 
-        {
-            printf("Error setting socket permissions\n");
-        }        
         fcntl(s, F_SETFL, O_NONBLOCK); // non-blocking operations
         local.sun_family = AF_UNIX;
         strcpy(local.sun_path, NSOCKET);
@@ -70,6 +66,7 @@ int main(int argc, char * argv[])
         if (listen(s, 5) == -1) {
             printf("Socket listen failed\n");
         }
+		umask(mask);
         // -- socket end
     
         while ((i = getopt (argc, argv, "idc:t:h")) != -1)
