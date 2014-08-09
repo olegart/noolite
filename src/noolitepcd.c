@@ -46,6 +46,10 @@ int main(int argc, char * argv[])
         printf("Socket error\n");
         exit(EXIT_FAILURE);
     }
+    if (fchmod(s, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) < 0) // socket file permissions = 0666 
+    {
+        printf("Error setting socket permissions\n");
+    }
     local.sun_family = AF_UNIX;
     strcpy(local.sun_path, NSOCKET);
     unlink(local.sun_path);
@@ -252,7 +256,7 @@ int main(int argc, char * argv[])
             syslog(LOG_ERR, "USB data transfer error %i", ret);
         }
         syslog(LOG_INFO, "Sent: %s: mode %i, command %i, format %i, address %i %i, data %i %i %i", input, COMMAND_ACTION[0], COMMAND_ACTION[1], COMMAND_ACTION[2], COMMAND_ACTION[3], COMMAND_ACTION[4], COMMAND_ACTION[5], COMMAND_ACTION[6], COMMAND_ACTION[7]);
-		
+        
         struct timespec tw = {0, INTERVAL}; // wait for current transmission to complete
         while (nanosleep (&tw, &tw) == -1) continue;
     }
