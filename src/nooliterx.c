@@ -52,6 +52,8 @@ int main(int argc, char * argv[])
             printf("Socket error\n");
             exit(EXIT_FAILURE);
         }
+        
+        mode_t mask = umask(0);
         if (fchmod(s, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) < 0) // socket file permissions = 0666 
         {
             printf("Error setting socket permissions\n");
