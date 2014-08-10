@@ -54,7 +54,8 @@ int main(int argc, char * argv[])
             exit(EXIT_FAILURE);
         }
         
-        fcntl(s, F_SETFL, O_NONBLOCK); // non-blocking operations
+		int flags = fcntl(s, F_GETFL, 0);
+		fcntl(s, F_SETFL, flags | O_NONBLOCK); // non-blocking operations
         local.sun_family = AF_UNIX;
         strcpy(local.sun_path, NSOCKET);
         unlink(local.sun_path);
