@@ -5,14 +5,14 @@
 START=70
 
 start() {
-        echo start
-        service_start /usr/bin/nooliterx -d
-	service_start /usr/bin/noolitepcd
+    echo start
+    service_start /usr/bin/nooliterx -d
+    service_start /usr/bin/noolitepcd
 }
 
 stop() {
-        echo stop
-        service_stop /usr/bin/nooliterx
-	service_stop /usr/bin/noolitepcd
+    echo stop
+    service_stop /usr/bin/nooliterx
+    service_stop /usr/bin/noolitepcd
 }
 

@@ -200,6 +200,10 @@ int main(int argc, char * argv[])
     syslog(LOG_INFO, "nooliterx started");
     
     char cmd[255];
+	struct timespec timeRecv;
+	long timeRecvNs = 0;
+	time_t timeRecvS = 0;
+	
     while (!do_exit)
     {
         s2 = accept(s, (struct sockaddr *)&remote, &t);
@@ -217,27 +221,32 @@ int main(int argc, char * argv[])
             ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_IN, 0x9, 0x300, 0, buf, 8, 500);
             if ((ret == 8) && (togl!=(buf[0] & 128))) // TOGL is a 7th bit of the 1st data byte (adapter status), it toggles value every time new command received
             {
-                togl = (buf[0] & 128);
-                
-                if (customcommand)
-                {
-                    strcpy(cmd, str_replace(cmd, "%st", int_to_str(buf[0]))); // adapter status
-                    strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1]+1))); // channel (+1 to be compatible with other utilities channel numbering scheme [1..x]
-                    strcpy(cmd, str_replace(cmd, "%cm", int_to_str(buf[2]))); // command
-                    strcpy(cmd, str_replace(cmd, "%df", int_to_str(buf[3]))); // data format
-                    strcpy(cmd, str_replace(cmd, "%d0", int_to_str(buf[4]))); // 1st data byte
-                    strcpy(cmd, str_replace(cmd, "%d1", int_to_str(buf[5]))); // 2nd data byte
-                    strcpy(cmd, str_replace(cmd, "%d2", int_to_str(buf[6]))); // 3rd data byte
-                    strcpy(cmd, str_replace(cmd, "%d3", int_to_str(buf[7]))); // 4th data byte
-                }
-                else
-                {
-                    sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
-                }
-                syslog(LOG_INFO, "Received: status %i, channel %i, command %i, format %i, data %i %i %i %i", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
-                system(cmd);
+				togl = (buf[0] & 128);
+				clock_gettime(CLOCK_REALTIME, &timeRecv);(CLOCK_REALTIME, &timeRecv);
+				if ((timeRecvS == 0) || (((long)(timeRecv.tv_sec - timeRecvS) + (timeRecv.tv_nsec - timeRecvNs)) < 300*1000000)) // > 300 ms
+				{
+					timeRecvNs = timeRecv.tv_nsec;
+					timeRecvS = timeRecv.tv_sec;
+
+					if (customcommand)
+					{
+						strcpy(cmd, str_replace(cmd, "%st", int_to_str(buf[0]))); // adapter status
+						strcpy(cmd, str_replace(cmd, "%ch", int_to_str(buf[1]+1))); // channel (+1 to be compatible with other utilities channel numbering scheme [1..x]
+						strcpy(cmd, str_replace(cmd, "%cm", int_to_str(buf[2]))); // command
+						strcpy(cmd, str_replace(cmd, "%df", int_to_str(buf[3]))); // data format
+						strcpy(cmd, str_replace(cmd, "%d0", int_to_str(buf[4]))); // 1st data byte
+						strcpy(cmd, str_replace(cmd, "%d1", int_to_str(buf[5]))); // 2nd data byte
+						strcpy(cmd, str_replace(cmd, "%d2", int_to_str(buf[6]))); // 3rd data byte
+						strcpy(cmd, str_replace(cmd, "%d3", int_to_str(buf[7]))); // 4th data byte
+					}
+					else
+					{
+						sprintf(cmd, "echo -e 'Adapter status:\t%i\\nChannel:\t%i\\nCommand:\t%i\\nData format:\t%i\\nData:\t\t%i %i %i %i\\n\\n'", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+					}
+					syslog(LOG_INFO, "Received: status %i, channel %i, command %i, format %i, data %i %i %i %i", buf[0], buf[1]+1, buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+					system(cmd);
+				}
             }
-            usleep(100000);   
         }
         else // incoming connection, working as configuration tool
         {
@@ -268,8 +277,8 @@ int main(int argc, char * argv[])
             
             ret = libusb_control_transfer(usbhandle, LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT, 0x9, 0x300, 0, COMMAND_ACTION, 8, 100);
             syslog(LOG_INFO, "Configuration command %s (channel %s) sent to USB receiver", rxcmd[0], rxcmd[1]);
-            usleep(100000); 
         }
+		usleep(100000);
     }
     libusb_attach_kernel_driver(usbhandle, DEV_INTF);
     libusb_close(usbhandle);
