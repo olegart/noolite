@@ -1,4 +1,4 @@
-AM_CFLAGS = -O1 -I -lrt
+AM_CFLAGS = -I
 AM_LDFLAGS = -lusb-1.0
 
 bin_PROGRAMS = noolitepc nooliterx nooliterxcfg noolitepcd
