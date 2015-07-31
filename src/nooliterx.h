@@ -3,11 +3,14 @@
 
 #include <libusb-1.0/libusb.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <unistd.h>
+#include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <string.h>
 #include <syslog.h>
 #include <sys/socket.h>
 #include <sys/un.h>

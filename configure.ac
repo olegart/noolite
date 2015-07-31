@@ -12,7 +12,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_CC
 
 # set -std=gnu99
-AC_PROG_CC_STDC
+AC_PROG_CC_C99 
 
 # Checks for libraries.
 

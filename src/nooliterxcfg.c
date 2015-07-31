@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define DEV_VID 0x16c0 //0x5824
 #define DEV_PID 0x05dc //0x1500

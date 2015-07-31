@@ -226,10 +226,10 @@ int main(int argc, char * argv[])
                 if (customcommand)
                 {
 					char *repstr;
-					static char *searchfor = {"%st", "%ch", "%sm", "%df", "%d0", "%d1", "%d2", "%d3"};
+					static char *searchfor[8] = {"%st", "%ch", "%sm", "%df", "%d0", "%d1", "%d2", "%d3"};
 					for (int k=0; k<8; k++)
 					{
-						repstr = str_replace(cmd, &searchfor[k], int_to_str(buf[k]));
+						repstr = str_replace(cmd, searchfor[k], int_to_str(buf[k]));
 						strcpy(cmd, repstr);
 						free(repstr);
 					}
