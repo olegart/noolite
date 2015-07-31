@@ -41,7 +41,7 @@ define Package/noolite/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/nooliterx $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/nooliterxcfg $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/noolitepcd $(1)/usr/bin/
-	$(INSTALL_BIN) ./files/noolite $(1)/etc/init.d/noolite
+	$(INSTALL_BIN) ./files/noolite.init $(1)/etc/init.d/noolite
 endef
 
 $(eval $(call BuildPackage,noolite))
