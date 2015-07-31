@@ -11,6 +11,9 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CC
 
+# set -std=gnu99
+AC_PROG_CC_STDC
+
 # Checks for libraries.
 
 # Checks for header files.
