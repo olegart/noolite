@@ -12,6 +12,8 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
+TARGET_CFLAGS+=--std=gnu99
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/noolite
