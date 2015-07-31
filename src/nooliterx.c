@@ -233,7 +233,7 @@ int main(int argc, char * argv[])
 						if (k == 1)
 							incr = 1; // compatibility fix
 
-						repstr = str_replace(cmd, searchfor[k], int_to_str(buf[k]) + incr);
+						repstr = str_replace(cmd, searchfor[k], int_to_str(buf[k] + incr));
 						strcpy(cmd, repstr);
 						free(repstr);
 					}
