@@ -7,7 +7,7 @@ START=70
 start() {
     echo start
     service_start /usr/bin/nooliterx -d
-    service_start /usr/bin/noolitepcd
+    service_start /usr/bin/noolitepcd -d
 }
 
 stop() {

@@ -229,7 +229,11 @@ int main(int argc, char * argv[])
 					static char *searchfor[8] = {"%st", "%ch", "%sm", "%df", "%d0", "%d1", "%d2", "%d3"};
 					for (int k=0; k<8; k++)
 					{
-						repstr = str_replace(cmd, searchfor[k], int_to_str(buf[k]));
+						int incr = 0;
+						if (k == 1)
+							incr = 1; // compatibility fix
+
+						repstr = str_replace(cmd, searchfor[k], int_to_str(buf[k]) + incr);
 						strcpy(cmd, repstr);
 						free(repstr);
 					}

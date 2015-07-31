@@ -35,11 +35,13 @@ define Build/Configure
 endef
 
 define Package/noolite/install
+	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/noolitepc $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/nooliterx $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/nooliterxcfg $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/noolitepcd $(1)/usr/bin/
+	$(INSTALL_BIN) ./files/noolite $(1)/etc/init.d/noolite
 endef
 
 $(eval $(call BuildPackage,noolite))
