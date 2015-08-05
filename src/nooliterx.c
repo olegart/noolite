@@ -226,7 +226,7 @@ int main(int argc, char * argv[])
                 if (customcommand)
                 {
 					char repstr[255];
-					static char *searchfor[8] = {"%st", "%ch", "%sm", "%df", "%d0", "%d1", "%d2", "%d3"};
+					static char *searchfor[8] = {"%st", "%ch", "%cm", "%df", "%d0", "%d1", "%d2", "%d3"};
 					for (int k=0; k<8; k++)
 					{
 						int incr = 0;
