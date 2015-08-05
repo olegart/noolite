@@ -25,7 +25,7 @@
 #define EP_OUT 0x01
 
 void usage(void);
-char *str_replace(const char *s, const char *old, const char *new);
+void str_replace(char *ret, const char *s, const char *old, const char *new);
 char* int_to_str(int num);
 void cleanup(int sig);
 

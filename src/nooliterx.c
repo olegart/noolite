@@ -225,7 +225,7 @@ int main(int argc, char * argv[])
                 
                 if (customcommand)
                 {
-					char *repstr;
+					char repstr[255]2;
 					static char *searchfor[8] = {"%st", "%ch", "%sm", "%df", "%d0", "%d1", "%d2", "%d3"};
 					for (int k=0; k<8; k++)
 					{
@@ -233,9 +233,8 @@ int main(int argc, char * argv[])
 						if (k == 1)
 							incr = 1; // compatibility fix
 
-						repstr = str_replace(cmd, searchfor[k], int_to_str(buf[k] + incr));
+						str_replace(repstr, cmd, searchfor[k], int_to_str(buf[k] + incr));
 						strcpy(cmd, repstr);
-						free(repstr);
 					}
                 }
                 else
@@ -313,9 +312,8 @@ void usage(void)
     printf("  %%d3\t Data (4th byte)\n");
 }
 
-char *str_replace(const char *s, const char *old, const char *new)
+void str_replace(char *ret, const char *s, const char *old, const char *new)
 {
-    char *ret;
     int i, count = 0;
     size_t newlen = strlen(new);
     size_t oldlen = strlen(old);
@@ -328,13 +326,7 @@ char *str_replace(const char *s, const char *old, const char *new)
             i += oldlen - 1;
         }
     }
-
-    ret = malloc(i + count * (newlen - oldlen));
-    if (ret == NULL)
-    {
-        exit(EXIT_FAILURE);
-    }
-    
+  
     i = 0;
     while (*s)
     {
@@ -351,7 +343,6 @@ char *str_replace(const char *s, const char *old, const char *new)
     }
     
     ret[i] = '\0';
-    return ret;
 }
 
 char* int_to_str(int num)
