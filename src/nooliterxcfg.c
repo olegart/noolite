@@ -52,7 +52,7 @@ int main(int argc, char * argv[])
         
         if (argc == 2) // no channel number expected
         {
-            if ((strcmp(argv[1], "--bind") == 0) || (strcmp(argv[1], "--clear")))
+            if ((strcmp(argv[1], "--bind") == 0) || (strcmp(argv[1], "--clear") == 0))
             {
                 printf("No channel number given.\n");
                 usage();
