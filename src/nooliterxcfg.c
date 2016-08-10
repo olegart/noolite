@@ -98,7 +98,7 @@ int main(int argc, char * argv[])
             channel--;
             if ((channel>63)||(channel<0))
             {
-                printf("Channel number out of range (1-64)\n", argv[0]);
+                printf("Channel %s is out of range (1-64)\n", argv[0]);
                 usage();
                 return -1;
             }
