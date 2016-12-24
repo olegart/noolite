@@ -227,7 +227,8 @@ int main(int argc, char * argv[])
                 {
 					char repstr[255];
 					static char *searchfor[8] = {"%st", "%ch", "%cm", "%df", "%d0", "%d1", "%d2", "%d3"};
-					for (int k=0; k<8; k++)
+					int k;
+					for (k=0; k<8; k++)
 					{
 						int incr = 0;
 						if (k == 1)
